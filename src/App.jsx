@@ -1,27 +1,27 @@
-
 import { BrowserRouter as Router, Routes, Route, NavLink } from "react-router-dom";
 import Header from "./components/Header";
 import FeedbackList from "./components/FeedbackList";
 import FeedbackStats from "./components/FeedbackStats";
 import FeedbackForm from "./components/FeedbackForm";
 import AboutPage from "./components/pages/AboutPage";
+import RegisterPage from "./components/pages/RegisterPage";
+import Login from "./components/pages/Login";
 import Card from "./components/shared/Card";
 import { FeedbackProvider } from "./context/FeedbackContext";
+import AuthProvider from "./context/AuthContext";
+import useLocalStorage from "./hooks/useLocalStorage";
+
+
+
 
 function App() {
-  const deleteHandler = (id) => {
-    if (window.confirm("Are you sure you want to delete this item?")) {
-      setFeedback(feedback.filter((item) => item.id !== id));
-    }
-  };
-
-  const postHandler = (newFeedBack) => {
-    newFeedBack.id = uuid4();
-    setFeedback([newFeedBack, ...feedback]);
-  };
+  const {getItem} = useLocalStorage("x-auth-token")
+  const token = getItem()
+  let authInitialState = {accessToken: token ?? null}
 
   return (
-   <FeedbackProvider>
+   <AuthProvider defaultState={authInitialState}>
+    <FeedbackProvider>
      <Router>
       <Header />
       <div className="container">
@@ -36,7 +36,6 @@ function App() {
               </>
             }
           />
-          <Route path="/about" element={<AboutPage />}/>
         </Routes>
         <Card>
           <NavLink to="/" activeclassname="active">
@@ -49,7 +48,9 @@ function App() {
       </div>
     </Router>
    </FeedbackProvider>
-  );
+ 
+   </AuthProvider>
+    )
 }
 
 export default App;

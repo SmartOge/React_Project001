@@ -1,9 +1,12 @@
 import Card from "./shared/Card";
 import Button from "./shared/Button";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import RatingSelect from "./RatingSelect";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import FeedbackContext from "../context/FeedbackContext";
+import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+
 
 function FeedbackForm() {
   const {postHandler, editFeedback, updateFeedback} = useContext(FeedbackContext)
@@ -11,6 +14,9 @@ function FeedbackForm() {
   const [rating, setRating] = useState(10)
   const [btnDisabled, setBtnDisabled] = useState(true);
   const [message, setMessage] = useState("");
+  const [state, dispatch] = useAuth()
+
+  const isAuthenticated = state.accessToken !== null;
 
   useEffect(()=>{
     if (editFeedback.edit === true) {
@@ -44,7 +50,7 @@ function FeedbackForm() {
       }
 
       if (editFeedback.edit === true) {
-        updateFeedback(editFeedback.item.id, newFeedBack)
+        updateFeedback(editFeedback.item._id, newFeedBack)
       }else{
         postHandler(newFeedBack)
       }
@@ -53,24 +59,33 @@ function FeedbackForm() {
     }
   }
 
+  const postform = <form onSubmit={handleSubmit}>
+  <h3 className="how">How would you like to rate our service?</h3>
+  <RatingSelect select={(rating) => setRating(rating)}/>
+  <div className="input-group">
+    <input
+      type="text"
+      placeholder="Write a Review"
+      value={text}
+      onChange={handleTextChange}
+    />
+    <Button type="submit" isDisabled={btnDisabled} version={"tertiary"}>
+      Submit
+    </Button>
+    {message && <div>{message}</div>}
+  </div>
+</form>
+
   return (
     <Card>
-      <form onSubmit={handleSubmit}>
-        <h3 className="how">How would you like to rate our service?</h3>
-        <RatingSelect select={(rating) => setRating(rating)}/>
-        <div className="input-group">
-          <input
-            type="text"
-            placeholder="Write a Review"
-            value={text}
-            onChange={handleTextChange}
-          />
-          <Button type="submit" isDisabled={btnDisabled} version={"tertiary"}>
-            Submit
-          </Button>
-          {message && <div>{message}</div>}
-        </div>
-      </form>
+      {isAuthenticated ? (postform) : (
+        <>
+        <div>Please Login to Leave a Feedback</div>
+        <Link to="/login">
+          <Button>Login</Button>
+        </Link>
+        </>
+      )}
     </Card>
   );
 }

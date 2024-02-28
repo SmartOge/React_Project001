@@ -12,30 +12,32 @@ export const FeedbackProvider = ({children})=>{
   }, [])
 
   const getFeedback = async ()=>{
-    const response = await fetch ('http://localhost:3000/feedBack')
+    const response = await fetch ('http://localhost:3010/api/feedback')
     const data = await response.json()
     setFeedback(data);
   };
    
    const deleteHandler = async (id) => {
     if (window.confirm("Are you sure you want to delete this item?")) {
-      await fetch(`http://localhost:3000/feedBack/${id}`, { method: "DELETE" });
+      await fetch(`http://localhost:3010/api/feedback/${id}`, { method: "DELETE" });
 
-      setFeedback(feedback.filter((item) => item.id !== id));
+      setFeedback(feedback.filter((item) => item._id !== id));
     }
   };
 
-  const postHandler = async (newFeedBack) => {
-    const response = await fetch (`http://localhost:3000/feedBack`, {
-      method: "POST",
-      header: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(newFeedBack)
-    })
-    const data = await response.json()
-    setFeedback([data, ...feedback]);
-  };
+const postHandler = async (newFeedBack) => {
+  const response = await fetch (`http://localhost:3010/api/feedback`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-auth-token": state.accessToken
+    },
+    body: JSON.stringify(newFeedBack)
+  })
+
+  const data = await response.json()
+  setFeedback([data, ...feedback]);
+};
 
 const [editFeedback, setEditFeedback] = useState({
   item: {},
@@ -51,7 +53,7 @@ const [editFeedback, setEditFeedback] = useState({
 
 
     const updateFeedback = async (id, updItem) => {
-      const response = await fetch(`http://localhost:3000/feedBack/${id}`, {
+      const response = await fetch(`http://localhost:3010/api/feedback/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json"
@@ -61,13 +63,9 @@ const [editFeedback, setEditFeedback] = useState({
 
       const data = await response.json()
       setFeedback(
-        feedback.map((item) => (item.id === id ? {...item, ...data} : item))
+        feedback.map((item) => (item._id === id ? {...item, ...data} : item))
       );
     };
-
-
- 
-
  
 
   return(
@@ -77,13 +75,11 @@ const [editFeedback, setEditFeedback] = useState({
       postHandler, 
       feedbackEdit, 
       editFeedback,
-      updateFeedback}}>
+      updateFeedback,
+      }}
+      >
       {children}
     </FeedbackContext.Provider>
   )
-
- 
-}
-
-
+};
 export default FeedbackContext
