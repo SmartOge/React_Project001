@@ -1,11 +1,11 @@
 import { createContext, useState,useEffect } from "react";
-import feedbackData from "../data/FeedbackData"
-import { v4 as uuid4 } from "uuid";
+import { useAuth } from "./AuthContext";
 
 const FeedbackContext = createContext(null)
 
 export const FeedbackProvider = ({children})=>{
   const [feedback, setFeedback] = useState([]);
+  const [state, dispatch] = useAuth()
 
   useEffect(()=> {
     getFeedback()

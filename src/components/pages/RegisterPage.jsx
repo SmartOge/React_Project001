@@ -15,18 +15,18 @@ async function registerHandler(e) {
   e.preventDefault()
 
   try {
-    const res = await fetch(`https://feedback-api-czt2.onrender.com/api/login`, {
+    const res = await fetch(`https://feedback-api-czt2.onrender.com/api/register`, {
       method: "POST",
-      Headers: {
+      headers: {
         "Content-Type": "application/json"
       },
-      body: JSON.strignify({username, email, password})
+      body: JSON.stringify({username, email, password})
     })
     const data = await res.text()
 
-    if (data === "exit") {
+    if (data === "exist") {
       alert("User already exist")
-    }else if (data !== "exit") {
+    }else if (data !== "exist") {
       redirect("/login")
     }
     }

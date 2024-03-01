@@ -7,12 +7,12 @@ import { Link } from "react-router-dom";
 
 function FeedbackItem({ feedback }) {
 const {deleteHandler, feedbackEdit} = useContext(FeedbackContext)
-const [state, dispatch] = useAuth
+const [state, dispatch] = useAuth()
 
 const isAuthenticated = state.accessToken !== null
 
 const prop = <>
-<button className="close" onClick={()=> deleteHandler(feed._id)}>
+<button className="close" onClick={()=> deleteHandler(feedback._id)}>
 <BsXOctagon />
 </button>
 <button className="edit" onClick={() => feedbackEdit(feedback)}>

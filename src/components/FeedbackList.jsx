@@ -13,7 +13,7 @@ const {feedback} = useContext(FeedbackContext)
       {feedback.map((item) => (
         <FeedbackItem
           key={item._id}
-          feedback={item} deleteFeedback={handleDelete}
+          feedback={item}
         />
       ))}
     </div>
