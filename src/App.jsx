@@ -26,9 +26,7 @@ function App() {
       <Header />
       <div className="container">
         <Routes>
-          <Route
-            path="/"
-            element={
+          <Route path="/"element={
               <>
                 <FeedbackForm  />
                 <FeedbackStats />
@@ -36,6 +34,10 @@ function App() {
               </>
             }
           />
+       <Route path= "/about" element={<AboutPage />}/>
+       <Route path= "/register" element={<RegisterPage />}/>
+       <Route path= "/login" element={<Login />}/>
+
         </Routes>
         <Card>
           <NavLink to="/" activeclassname="active">

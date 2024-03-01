@@ -84,6 +84,9 @@ function FeedbackForm() {
         <Link to="/login">
           <Button>Login</Button>
         </Link>
+        <Link to="/register">
+          <Button>Register</Button>
+        </Link>
         </>
       )}
     </Card>
